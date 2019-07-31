@@ -1,0 +1,73 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.pinyougou</groupId>
+    <artifactId>pinyougou-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>pinyougou-common</artifactId>
+  
+  <dependencies>
+  
+  			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>				
+			</dependency>
+			<!-- Spring -->
+	
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-test</artifactId>
+	</dependency>
+  
+  <!-- 文件上传组件 -->
+		<dependency>
+		    <groupId>org.csource.fastdfs</groupId>
+		    <artifactId>fastdfs</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+		</dependency> 
+		
+		 <!-- 缓存 -->
+	<dependency> 
+		  <groupId>redis.clients</groupId> 
+		  <artifactId>jedis</artifactId> 
+	</dependency> 
+	<dependency> 
+		  <groupId>org.springframework.data</groupId> 
+		  <artifactId>spring-data-redis</artifactId> 
+	</dependency>
+	
+	<!-- 为了cookie -->
+	<dependency>
+		<groupId>javax.servlet</groupId>
+		<artifactId>servlet-api</artifactId>
+		<scope>provided</scope>
+	</dependency>
+	
+	   <!-- 工具类HttpClient.java -->
+		<dependency>
+	  		<groupId>org.apache.httpcomponents</groupId>
+	  		<artifactId>httpclient</artifactId>	  		
+	  	</dependency>
+  </dependencies>
+  
+  
+  <!-- 跳过test测试类 -->
+   <build> 
+    <plugins> 
+      <plugin> 
+        <groupId>org.apache.maven.plugins</groupId> 
+        <artifactId>maven-surefire-plugin</artifactId> 
+        <configuration> 
+          <skip>true</skip> 
+        </configuration> 
+      </plugin> 
+    </plugins> 
+  </build> 
+  
+  
+  
+</project>

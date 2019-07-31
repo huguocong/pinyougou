@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+    	xmlns:context="http://www.springframework.org/schema/context"
+     xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+   
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	   http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+	               http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+						http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+  
+   <context:property-placeholder location="classpath:config/application.properties" />
+  
+
+	<!-- 以下页面不被拦截 -->
+	<http pattern="/*.html" security="none"></http>
+	<http pattern="/css/**" security="none"></http>
+	<http pattern="/img/**" security="none"></http>
+	<http pattern="/js/**" security="none"></http>
+	<http pattern="/plugins/**" security="none"></http>
+	
+	<http pattern="/seller/add.do" security="none"></http> 	 <!--  ！！！！！！！！！！！！！！！！ -->
+	
+	<!-- 页面拦截规则 -->
+	<!-- login-page：指定登录页面。
+    authentication-failure-url：指定了身份验证失败时跳转到的页面。
+    default-target-url：指定了成功进行身份验证和授权后默认呈现给用户的页面。
+     csrf disabled="true"  关闭csrf ,如果不加会出现错误                    -->
+     
+	<http use-expressions="false">
+		<intercept-url pattern="/**" access="ROLE_SHOP" />
+		<form-login login-page="/shoplogin.html"  default-target-url="/admin/index.html" 
+		authentication-failure-url="/shoplogin.html" always-use-default-target="true"/>	
+		<csrf disabled="true"/>
+		
+		<!--    如果登陆页面action自定义 需要在上面加上 login-processing-url="自定义地址"    -->
+		
+		<!-- 加上才允许使用内置框架页 -->
+		<headers>
+			<frame-options policy="SAMEORIGIN"/>
+		</headers>
+		
+		<!-- 退出登录 -->
+		<!-- 
+		加此配置后，会自动的产生退出登录的地址/logout,如果你不想用这个地址 ，你也可以定义生成的退出地址以及跳转的页面，配置如下
+               <logout logout-url="" logout-success-url=""/>
+               logout-url:退出的地址，会自动生成
+              logout-success-url:退出后跳转的地址 -->
+              
+		<logout/>
+	</http>
+
+	<!-- 认证管理器 -->
+	<authentication-manager>	
+		<authentication-provider user-service-ref="UserDetailsService">
+		  <password-encoder ref="bcryptEncoder"></password-encoder>
+		</authentication-provider>
+	</authentication-manager>
+	
+	<beans:bean id="UserDetailsService" class="com.pinyougou.service.UserDetailsServiceImpl">	
+	   <beans:property name="selleerService" ref="selleerService"></beans:property>
+	   </beans:bean>
+	   
+	   <!-- 引用dubbo 服务 -->
+	<dubbo:application name="pinyougou-shop-web" />	
+	 <dubbo:registry address="${zookeeper}"/> 
+	<dubbo:reference id="selleerService"  interface="com.pinyougou.sellergoods.service.SellerService" >
+	</dubbo:reference>
+       
+        <!-- 密码加密配置 -->	
+        <beans:bean id="bcryptEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+
+
+
+		
+</beans:beans>
